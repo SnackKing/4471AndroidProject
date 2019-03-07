@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
     public void checkPermissions(){
         String[] requests = {
                 android.Manifest.permission.READ_CONTACTS,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_CALL_LOG
+
         };
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
