@@ -71,6 +71,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
 
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
