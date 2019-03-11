@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1087652582625-i311c5tkqk8h8hruidu4umeg2i9bt21n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alleg.a4471project",
+            "certificate_hash": "555877bdd82236b76e88a4191609ca49ffa41de9"
+          }
+        },
+        {
           "client_id": "1087652582625-od9qsamuo9kf2nujihlptkgtjjmvbbpv.apps.googleusercontent.com",
           "client_type": 3
         }
