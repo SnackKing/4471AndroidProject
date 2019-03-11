@@ -1,9 +1,14 @@
 package com.example.alleg.a4471project;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +17,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.Toast;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -76,6 +82,22 @@ public class MainActivity extends AppCompatActivity {
             // Permission is not granted
             ActivityCompat.requestPermissions(this,requests,PERMISSIONS);
         }
+
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("MAINACTIVITY", "RESUME");
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, 0);
+        AlarmManager am =( AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        if (am!= null) {
+            am.cancel(alarmIntent);
+        }
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + 10,10, alarmIntent);
+        // SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
+        //        AlarmManager.INTERVAL_HALF_HOUR
     }
 
     @Override
