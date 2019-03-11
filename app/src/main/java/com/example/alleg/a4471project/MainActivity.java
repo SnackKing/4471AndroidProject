@@ -9,6 +9,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -21,8 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private final int PERMISSIONS = 1;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-
-
+    GameLogic mainLogic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkPermissions();
         getContactList();
+
+        mainLogic = new GameLogic(getButtons());
+
+        // get main table, set  up swipe listeners
+        TableLayout mainTable = findViewById(R.id.MainTable);
+        mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
+            @Override
+            public void onSwipeTop() {
+                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeUp();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeRight();
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeUp();
+            }
+
+            @Override
+            public void onSwipeBottom() {
+                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeDown();
+            }
+        });
     }
+
     public void checkPermissions(){
         String[] requests = {
                 android.Manifest.permission.READ_CONTACTS,
@@ -43,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
             // Permission is not granted
             ActivityCompat.requestPermissions(this,requests,PERMISSIONS);
         }
-
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -115,5 +148,8 @@ public class MainActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getUid();
     }
 
-
+    // 2048 code below
+    public Button[][] getButtons() {
+        return new Button[4][4];
+    }
 }
