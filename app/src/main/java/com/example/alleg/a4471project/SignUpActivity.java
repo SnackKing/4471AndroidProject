@@ -41,6 +41,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    FirebaseDatabase database;
+    DatabaseReference database;
 
     // UI references.
     private EditText mNameView;
@@ -67,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         FirebaseApp.initializeApp(this);
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -87,12 +88,12 @@ public class SignUpActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                addUser(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                addUser(mEmailView.getText().toString(), mPasswordView.getText().toString(), mPhoneView.getText().toString(), mNameView.getText().toString());
             }
         });
 
     }
-    public void addUser(String email, String password){
+    public void addUser(String email, String password, final String phone, final String name){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -100,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            writeNewUser(user.getUid(),"Need to add this", name, phone);
                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
@@ -112,6 +114,12 @@ public class SignUpActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+    private void writeNewUser(String userId, String dateOfBirth, String name, String phoneNumber){
+        LocalDateTime joinDate = LocalDateTime.now();
+        User user = new User(dateOfBirth, name, phoneNumber, joinDate);
+
+        database.child("users").child(userId).setValue(user);
     }
 
 
