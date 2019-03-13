@@ -14,11 +14,16 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 public class AlarmReceiver extends BroadcastReceiver {
     DatabaseReference mRootRef;
+    String uid;
 
 
     @Override
@@ -26,6 +31,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("BACKGROUND", "FIRED");
         FirebaseApp.initializeApp(context);
         mRootRef =  FirebaseDatabase.getInstance().getReference();
+        uid = FirebaseAuth.getInstance().getUid();
+
         if ( ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             GPSTracker gps = new GPSTracker(context);
 
@@ -34,7 +41,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 double latitude = gps.getLatitude();
                 double longitude = gps.getLongitude();
-                mRootRef.child("Locations").setValue(new Location(String.valueOf(latitude),String.valueOf(longitude)));
+                String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+                mRootRef.child("Locations").child(uid).child(currentDateTimeString).setValue(new Location(String.valueOf(latitude),String.valueOf(longitude)));
 
 
             } else {

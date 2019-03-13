@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             am.cancel(alarmIntent);
         }
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 10,10, alarmIntent);
+                SystemClock.elapsedRealtime() + 5000,500, alarmIntent);
         // SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
         //        AlarmManager.INTERVAL_HALF_HOUR
     }
