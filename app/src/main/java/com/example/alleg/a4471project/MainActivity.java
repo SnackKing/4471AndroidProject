@@ -128,11 +128,7 @@ public class MainActivity extends AppCompatActivity {
         mRootRef.child("locations").child(userId).setValue(location);
     }
 
-    private void writeNewCallLog(String userId, String opposingNumber, LocalDateTime callStart, LocalDateTime callEnd){
-        Call_Log callLog = new Call_Log(opposingNumber, callStart, callEnd);
 
-        mRootRef.child("call_log").child(userId).setValue(callLog);
-    }
     private void getContactList() {
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
