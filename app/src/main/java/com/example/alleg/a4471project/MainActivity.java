@@ -38,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
-        getContactList();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                == PackageManager.PERMISSION_GRANTED) {
+            getContactList();
+        }
 
         mainLogic = initGameLogic();
     }
@@ -78,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSIONS: {
                 // If request is cancelled, the result arrays are empty.
+                for(int i = 0; i < permissions.length;i++){
+                    String permission = permissions[i];
+                    if(permission.equals(Manifest.permission.READ_CONTACTS)){
+                        if(grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                            getContactList();
+                        }
+                    }
+                }
                 for(int result: grantResults){
                     if(result != PackageManager.PERMISSION_GRANTED){
                         checkPermissions();
