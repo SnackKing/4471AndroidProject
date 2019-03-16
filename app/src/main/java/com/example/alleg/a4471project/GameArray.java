@@ -40,9 +40,11 @@ public class GameArray {
         return values[row][col];
     }
 
-    public void swipeRight() {}
-    public void swipeLeft() {}
-    public void swipeUp() {}
-    public void swipeDown() {}
+    // these return the score increase
+
+    public int swipeRight() { return 0; }
+    public int swipeLeft() { return 0; }
+    public int swipeUp() { return 0; }
+    public int swipeDown() { return 0; }
 
 }

@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
 
@@ -39,35 +40,7 @@ public class MainActivity extends AppCompatActivity {
         checkPermissions();
         getContactList();
 
-        mainLogic = new GameLogic(getButtons());
-
-        // get main table, set  up swipe listeners
-        TableLayout mainTable = findViewById(R.id.MainTable);
-        mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
-            @Override
-            public void onSwipeTop() {
-                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-                mainLogic.swipeUp();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-                mainLogic.swipeRight();
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-                mainLogic.swipeLeft();
-            }
-
-            @Override
-            public void onSwipeBottom() {
-                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-                mainLogic.swipeDown();
-            }
-        });
+        mainLogic = initGameLogic();
     }
 
     public void checkPermissions(){
@@ -167,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 2048 code below
-    public Button[][] getButtons() {
+    private Button[][] getButtons() {
         Button[][] buttons =  new Button[4][4];
 
         for (int i = 0; i < 4; i++) {
@@ -181,5 +154,40 @@ public class MainActivity extends AppCompatActivity {
         // TODO set button sizes
 
         return buttons;
+    }
+
+    private GameLogic initGameLogic() {
+        TextView sd = findViewById(R.id.score);
+
+        // get main table, set  up swipe listeners
+        TableLayout mainTable = findViewById(R.id.MainTable);
+        mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
+            @Override
+            public void onSwipeTop() {
+                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeUp();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeRight();
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeLeft();
+            }
+
+            @Override
+            public void onSwipeBottom() {
+                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+                mainLogic.swipeDown();
+            }
+        });
+
+
+        return new GameLogic(getButtons(), sd);
     }
 }
