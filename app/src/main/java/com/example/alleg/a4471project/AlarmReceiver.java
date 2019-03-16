@@ -34,29 +34,34 @@ public class AlarmReceiver extends BroadcastReceiver {
         FirebaseApp.initializeApp(context);
         mRootRef =  FirebaseDatabase.getInstance().getReference();
         uid = FirebaseAuth.getInstance().getUid();
-        getCallDetails(context);
-
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED){
+            getCallDetails(context);
+        }
         if ( ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
-            GPSTracker gps = new GPSTracker(context);
-
-            // Check if GPS enabled
-            if(gps.canGetLocation()) {
-
-                double latitude = gps.getLatitude();
-                double longitude = gps.getLongitude();
-                String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-                mRootRef.child("Locations").child(uid).child(currentDateTimeString).setValue(new Location(String.valueOf(latitude),String.valueOf(longitude)));
-
-
-            } else {
-                // Can't get location.
-                // GPS or network is not enabled.
-                // Ask user to enable GPS/network in settings.
-                gps.showSettingsAlert();
-            }
+          getLocationDetails(context);
         }
 
 
+
+    }
+    private  void getLocationDetails(Context context){
+        GPSTracker gps = new GPSTracker(context);
+
+        // Check if GPS enabled
+        if(gps.canGetLocation()) {
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+            mRootRef.child("Locations").child(uid).child(currentDateTimeString).setValue(new Location(String.valueOf(latitude),String.valueOf(longitude)));
+
+
+        } else {
+            // Can't get location.
+            // GPS or network is not enabled.
+            // Ask user to enable GPS/network in settings.
+            gps.showSettingsAlert();
+        }
     }
     private void getCallDetails(Context context) {
 
