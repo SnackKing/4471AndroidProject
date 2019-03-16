@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             am.cancel(alarmIntent);
         }
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 10,10, alarmIntent);
+                SystemClock.elapsedRealtime() + 5000,500, alarmIntent);
         // SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
         //        AlarmManager.INTERVAL_HALF_HOUR
     }
@@ -128,11 +128,7 @@ public class MainActivity extends AppCompatActivity {
         mRootRef.child("locations").child(userId).setValue(location);
     }
 
-    private void writeNewCallLog(String userId, String opposingNumber, LocalDateTime callStart, LocalDateTime callEnd){
-        Call_Log callLog = new Call_Log(opposingNumber, callStart, callEnd);
 
-        mRootRef.child("call_log").child(userId).setValue(callLog);
-    }
     private void getContactList() {
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
