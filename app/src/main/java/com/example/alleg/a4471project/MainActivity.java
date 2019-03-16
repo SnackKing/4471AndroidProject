@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwipeLeft() {
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-                mainLogic.swipeUp();
+                mainLogic.swipeLeft();
             }
 
             @Override
@@ -179,6 +179,18 @@ public class MainActivity extends AppCompatActivity {
 
     // 2048 code below
     public Button[][] getButtons() {
-        return new Button[4][4];
+        Button[][] buttons =  new Button[4][4];
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++ ) {
+                String buttonID = "grid" + i + j;
+                int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
+                buttons[i][j] = findViewById(resID);
+            }
+        }
+
+        // TODO set button sizes
+
+        return buttons;
     }
 }

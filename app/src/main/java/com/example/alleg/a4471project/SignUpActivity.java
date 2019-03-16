@@ -78,9 +78,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mLoginFormView = findViewById(R.id.login_form);
         mNameView = findViewById(R.id.name);
         mPhoneView = findViewById(R.id.phone);

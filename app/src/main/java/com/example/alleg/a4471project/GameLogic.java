@@ -1,26 +1,40 @@
 package com.example.alleg.a4471project;
 
+import android.graphics.Color;
 import android.widget.Button;
 
 public class GameLogic {
 
     private static int getColor(int value) {
-        return 0;
+        if (value == 0) {
+            return Color.GRAY;
+        } else {
+            return Color.CYAN;
+        }
     }
 
     GameArray gameArr;
     Button[][] buttons;
 
-    public GameLogic(Button[][] buttons) {
+    public GameLogic(Button[][] btns) {
         gameArr = new GameArray();
-        buttons = buttons;
+        buttons = btns;
+
+        this.updateDisplay();
     }
 
     private void updateDisplay() {
         for (int i = 0; i < 4; i ++ ) {
             for (int j = 0; j < 4; j ++) {
-                buttons[i][j].setBackgroundColor(gameArr.getValue(i, j));
-                buttons[i][j].setText(gameArr.getValue(i, j));
+                int value = gameArr.getValue(i, j);
+
+                buttons[i][j].setBackgroundColor(getColor(value));
+
+                if (value == 0) {
+                    buttons[i][j].setText("");
+                } else {
+                    buttons[i][j].setText(Integer.toString(value));
+                }
             }
         }
     }
