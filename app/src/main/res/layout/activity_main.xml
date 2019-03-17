@@ -112,23 +112,27 @@
                     android:id="@+id/grid00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid02"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid03"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
             </TableRow>
@@ -140,24 +144,28 @@
                 <Button
                     android:id="@+id/grid10"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid11"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid12"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid13"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
             </TableRow>
@@ -169,24 +177,28 @@
                 <Button
                     android:id="@+id/grid20"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid21"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid22"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid23"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
             </TableRow>
@@ -198,24 +210,28 @@
                 <Button
                     android:id="@+id/grid30"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid31"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid32"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/grid33"
                     android:layout_width="wrap_content"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
                     android:text="Button" />
             </TableRow>
