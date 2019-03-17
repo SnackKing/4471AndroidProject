@@ -48,22 +48,53 @@ public class GameLogic {
     }
 
     public void swipeRight() {
-        score += gameArr.swipeRight();
-        this.updateDisplay();
+        finishMove(gameArr.swipeRight());
     }
 
     public void swipeLeft() {
-        score += gameArr.swipeLeft();
-        this.updateDisplay();
+        finishMove(gameArr.swipeLeft());
     }
 
     public void swipeUp() {
-        score += gameArr.swipeUp();
-        this.updateDisplay();
+        finishMove(gameArr.swipeUp());
     }
 
     public void swipeDown() {
-        score += gameArr.swipeDown();
-        this.updateDisplay();
+        finishMove(gameArr.swipeDown());
     }
+
+    private void finishMove(int newScore) {
+        if (newScore > 0) {
+            gameArr.addNumber();
+            score += newScore;
+        }
+
+        this.updateDisplay();
+
+        if (newScore >= 2048) {
+            if (hasWon()) {
+                win();
+            }
+        }
+
+        if (!hasWon() && !canMove()) {
+            lose();
+        }
+    }
+
+    // TODO
+    private boolean canMove() { return true; }
+    private boolean hasWon() { return false; }
+    private void lose() {
+        endGame();
+    }
+
+    private void win() {
+        endGame();
+    }
+
+    private void endGame() {
+        // update high scores and such
+    }
+
 }
