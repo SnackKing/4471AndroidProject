@@ -30,7 +30,39 @@ public class GameArray {
 
     // these return the score increase
 
-    public int swipeRight() { return 0; }
+    public int swipeRight() {
+        int score = 0;
+
+        //merge
+        for (int i = 0; i < values.length; i++) {
+            for (int j = values[0].length - 2; j >= 0; j --) {
+                if (values[i][j+1] == values[i][j]) {
+                    values[i][j+1] *= 2;
+                    values[i][j] = 0;
+
+                    score += values[i][j+1];
+                }
+            }
+        }
+
+        for (int i = 0; i < values.length; i++ ){
+            for (int j = values[0].length - 2; j >= 0; j --) {
+                if (values[i][j] != 0) {
+                    // else do nothing
+                    int walker = j + 1;
+
+                    while (walker < values[0].length && values[i][walker] == 0) {
+                        values[i][walker] = values[i][walker - 1];
+                        values[i][walker - 1] = 0;
+                        walker += 1;
+                    }
+                }
+            }
+        }
+
+        return score;
+    }
+
     public int swipeLeft() {
         int score = 0;
 
