@@ -30,13 +30,21 @@ public class GameLogic {
     }
 
     private void updateDisplay() {
+        this.updateDisplay(new int[] {-1, -1});
+    }
+
+    private void updateDisplay(int[] newNum) {
         scoreDisplay.setText(Integer.toString(score));
 
         for (int i = 0; i < 4; i ++ ) {
             for (int j = 0; j < 4; j ++) {
                 int value = gameArr.getValue(i, j);
 
-                buttons[i][j].setBackgroundColor(getColor(value));
+                if (newNum[0] == i && newNum[1] == j) {
+                    buttons[i][j].setBackgroundColor(Color.YELLOW);
+                } else {
+                    buttons[i][j].setBackgroundColor(getColor(value));
+                }
 
                 if (value == 0) {
                     buttons[i][j].setText("");
@@ -65,11 +73,11 @@ public class GameLogic {
 
     private void finishMove(int newScore) {
         if (newScore != GameArray.UNMOVED_TOKEN) {
-            gameArr.addNumber();
             score += newScore;
+            this.updateDisplay(gameArr.addNumber());
+        } else {
+            this.updateDisplay();
         }
-
-        this.updateDisplay();
 
         boolean won = hasWon();
 

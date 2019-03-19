@@ -127,7 +127,7 @@ public class GameArray {
         else return score;
     }
 
-    public void addNumber() {
+    public int[] addNumber() {
         //60% chance of 2, 40% chance of 4
         int starter = PROGRESSION[rand.nextInt(5) < 3 ? 1 : 2];
 
@@ -141,6 +141,8 @@ public class GameArray {
         }
 
         values[row][col] = starter;
+
+        return new int[] {row, col};
     }
 
     private boolean moveRight() {
