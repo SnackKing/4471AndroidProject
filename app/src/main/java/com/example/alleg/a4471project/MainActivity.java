@@ -8,25 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final int PERMISSIONS = 1;
@@ -44,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mainLogic = initGameLogic();
+
+        Button restartButton = findViewById(R.id.restart);
+        restartButton.setText("Restart");
+        restartButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mainLogic = initGameLogic();
+            }
+        });
     }
 
     public void checkPermissions(){
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             // permissions this app might request.
         }
     }
+
     private void writeNewContact(String userId, String fullName, String phoneNumber){
         Contact contact = new Contact(fullName, phoneNumber);
 
@@ -111,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
         mRootRef.child("locations").child(userId).setValue(location);
     }
-
 
     private void getContactList() {
         ContentResolver cr = getContentResolver();
@@ -175,25 +179,21 @@ public class MainActivity extends AppCompatActivity {
         mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
             @Override
             public void onSwipeTop() {
-                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
                 mainLogic.swipeUp();
             }
 
             @Override
             public void onSwipeRight() {
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
                 mainLogic.swipeRight();
             }
 
             @Override
             public void onSwipeLeft() {
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
                 mainLogic.swipeLeft();
             }
 
             @Override
             public void onSwipeBottom() {
-                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
                 mainLogic.swipeDown();
             }
         });
