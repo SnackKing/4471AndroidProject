@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class GameArray {
     public static final int[] PROGRESSION = {0,2,4,8,16,32,64,128,256,512,1024,2048};
+    public static final int UNMOVED_TOKEN = -1;
 
     private int[][] values;
 
@@ -31,12 +32,16 @@ public class GameArray {
     // these return the score increase
 
     public int swipeRight() {
-        int score = 0;
+        int score = UNMOVED_TOKEN;
 
         //merge
         for (int i = 0; i < values.length; i++) {
             for (int j = values[0].length - 2; j >= 0; j --) {
                 if (values[i][j+1] == values[i][j]) {
+                    if (score == UNMOVED_TOKEN) {
+                        score = 0;
+                    }
+
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
 
@@ -64,12 +69,16 @@ public class GameArray {
     }
 
     public int swipeLeft() {
-        int score = 0;
+        int score = UNMOVED_TOKEN;
 
         // start by merging, then move
         for (int i = 0; i < values.length; i ++) {
             for (int j = 1; j < values[0].length; j ++) {
                 if (values[i][j-1] == values[i][j]) {
+                    if (score == UNMOVED_TOKEN) {
+                        score = 0;
+                    }
+
                     // can merger
                     values[i][j-1] *= 2;
                     values[i][j] = 0;
@@ -97,8 +106,43 @@ public class GameArray {
 
         return score;
     }
-    public int swipeUp() { return 0; }
-    public int swipeDown() { return 0; }
+
+    public int swipeUp() {
+        int score = UNMOVED_TOKEN;
+
+        // merging
+        for (int j = 0; j < values[0].length; j++) {
+            for (int i = values.length - 2; i >= 0; i -- ) {
+                if (values[i][j] == values[i+1][j]) {
+                    if (score == UNMOVED_TOKEN) {
+                        score = 0;
+                    }
+
+                    values[i][j] *= 2;
+                    values[i+1][j] = 0;
+                    score += values[i][j];
+                }
+            }
+        }
+
+        for (int j = 0; j < values[0].length; j ++) {
+            for (int i = 1; i < values.length; i ++ ) {
+                if (values[i][j] != 0) {
+                    int walker = i - 1;
+
+                    while (walker >= 0 && values[walker][j] == 0) {
+                        values[walker][j] = values[walker + 1][j];
+                        values[walker + 1][j] = 0;
+                        walker -= 1;
+                    }
+                }
+            }
+        }
+
+        return score;
+    }
+
+    public int swipeDown() { return UNMOVED_TOKEN; }
 
     public void addNumber() {
         //60% chance of 2, 40% chance of 4

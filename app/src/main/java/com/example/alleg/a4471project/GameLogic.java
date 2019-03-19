@@ -64,27 +64,34 @@ public class GameLogic {
     }
 
     private void finishMove(int newScore) {
-        if (newScore > 0) {
+        if (newScore != GameArray.UNMOVED_TOKEN) {
             gameArr.addNumber();
             score += newScore;
         }
 
         this.updateDisplay();
 
-        if (newScore >= 2048) {
-            if (hasWon()) {
-                win();
-            }
+        boolean won = hasWon();
+
+        if (won) {
+            win();
         }
 
-        if (!hasWon() && !canMove()) {
+        if (won && !canMove()) {
             lose();
         }
     }
 
     // TODO
     private boolean canMove() { return true; }
-    private boolean hasWon() { return false; }
+
+    private boolean hasWon() {
+        if (score < 2048) {
+            return false;
+        }
+
+        return false;
+    }
     private void lose() {
         endGame();
     }
