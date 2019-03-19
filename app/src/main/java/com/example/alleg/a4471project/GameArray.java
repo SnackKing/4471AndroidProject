@@ -32,17 +32,15 @@ public class GameArray {
     // these return the score increase
 
     public int swipeRight() {
-        int score = UNMOVED_TOKEN;
+        int score = 0;
 
-        moveRight();
+        boolean moved = moveRight();
 
         //merge
         for (int i = 0; i < values.length; i++) {
             for (int j = values[0].length - 2; j >= 0; j --) {
                 if (values[i][j+1] == values[i][j]) {
-                    if (score == UNMOVED_TOKEN) {
-                        score = 0;
-                    }
+                    moved = true;
 
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
@@ -52,73 +50,81 @@ public class GameArray {
             }
         }
 
-        moveRight();
+        moved = moveRight() || moved;
 
-        return score;
+        if (!moved)
+            return UNMOVED_TOKEN;
+        else return score;
     }
 
     public int swipeLeft() {
-        int score = UNMOVED_TOKEN;
+        int score = 0;
 
-        moveLeft();
+        boolean moved = moveLeft();
 
-        // start by merging, then move
         for (int i = 0; i < values.length; i ++) {
-            for (int j = 1; j < values[0].length; j ++) {
-                if (values[i][j-1] == values[i][j]) {
-                    if (score == UNMOVED_TOKEN) {
-                        score = 0;
-                    }
+            for (int j = values.length-2; j >= 0 ; j ++) {
+                if (values[i][j+1] == values[i][j]) {
+                    moved = true;
 
                     // can merger
-                    values[i][j-1] *= 2;
+                    values[i][j+1] *= 2;
                     values[i][j] = 0;
 
-                    score += values[i][j-1];
+                    score += values[i][j+1];
                 }
             }
         }
 
-        moveLeft();
-
-        return score;
+        moved = moveLeft() || moved;
+        if (!moved) return UNMOVED_TOKEN;
+        else return score;
     }
 
     public int swipeUp() {
-        int score = UNMOVED_TOKEN;
+        int score = 0;
 
-        moveUp();
+        boolean moved = moveUp();
 
         // merging
         for (int j = 0; j < values[0].length; j++) {
-            for (int i = values.length - 2; i >= 0; i -- ) {
-                if (values[i][j] == values[i+1][j]) {
-                    if (score == UNMOVED_TOKEN) {
-                        score = 0;
-                    }
+            for (int i = 1; i < values.length; i ++ ) {
+                if (values[i][j] == values[i-1][j]) {
+                    moved = true;
 
-                    values[i+1][j] *= 2;
+                    values[i-1][j] *= 2;
                     values[i][j] = 0;
-                    score += values[i+1][j];
+                    score += values[i-1][j];
                 }
             }
         }
 
-        moveUp();
-
-        return score;
+        moved = moveUp() || moved;
+        if (!moved) return UNMOVED_TOKEN;
+        else return score;
     }
 
     public int swipeDown() {
-        int score = UNMOVED_TOKEN;
+        int score = 0;
 
-        moveDown();
+        boolean moved = moveDown();
 
         // merge
+        for (int j = 0; j < values[0].length; j ++) {
+            for (int i = 1; i < values.length; i ++) {
+                if (values[i][j] == values[i-1][j]) {
+                    moved = true;
 
-        moveDown();
+                    values[i - 1][j] *= 2;
+                    values[i][j] = 0;
+                    score += values[i-1][j];
+                }
+            }
+        }
 
-        return score;
+        moved = moveDown() || moved;
+        if (!moved) return UNMOVED_TOKEN;
+        else return score;
     }
 
     public void addNumber() {
@@ -137,7 +143,9 @@ public class GameArray {
         values[row][col] = starter;
     }
 
-    private void moveRight() {
+    private boolean moveRight() {
+        boolean moved = false;
+
         for (int i = 0; i < values.length; i++ ){
             for (int j = values[0].length - 2; j >= 0; j --) {
                 if (values[i][j] != 0) {
@@ -145,6 +153,7 @@ public class GameArray {
                     int walker = j + 1;
 
                     while (walker < values[0].length && values[i][walker] == 0) {
+                        moved = true;
                         values[i][walker] = values[i][walker - 1];
                         values[i][walker - 1] = 0;
                         walker += 1;
@@ -152,9 +161,13 @@ public class GameArray {
                 }
             }
         }
+
+        return moved;
     }
 
-    private void moveLeft() {
+    private boolean moveLeft() {
+        boolean moved = false;
+
         for (int i = 0; i < values.length; i++) {
             for (int j = 1; j < values[0].length; j ++) {
                 if (values[i][j] != 0) {
@@ -162,6 +175,8 @@ public class GameArray {
                     int walker = j - 1;
 
                     while (walker >= 0 && values[i][walker] == 0) {
+                        moved = true;
+
                         values[i][walker] = values[i][walker + 1];
                         values[i][walker + 1] = 0;
                         walker -= 1;
@@ -169,15 +184,20 @@ public class GameArray {
                 }
             }
         }
+
+        return moved;
     }
 
-    private void moveUp() {
+    private boolean moveUp() {
+        boolean moved = false;
+
         for (int j = 0; j < values[0].length; j ++) {
             for (int i = 1; i < values.length; i ++ ) {
                 if (values[i][j] != 0) {
                     int walker = i - 1;
 
                     while (walker >= 0 && values[walker][j] == 0) {
+                        moved = true;
                         values[walker][j] = values[walker + 1][j];
                         values[walker + 1][j] = 0;
                         walker -= 1;
@@ -185,10 +205,28 @@ public class GameArray {
                 }
             }
         }
+
+        return moved;
     }
 
-    private void moveDown() {
+    private boolean moveDown() {
+        boolean moved = false;
 
+        for (int j = 0; j < values[0].length; j++) {
+            for (int i = values.length - 2; i >= 0; i --) {
+                if (values[i][j] != 0) {
+                    int walker = i + 1;
+
+                    while (walker < values.length && values[walker][j] == 0) {
+                        moved = true;
+                        values[walker][j] = values[walker-1][j];
+                        values[walker-1][j] = 0;
+                        walker ++;
+                    }
+                }
+            }
+        }
+
+        return moved;
     }
-
 }
