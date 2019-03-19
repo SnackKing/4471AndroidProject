@@ -63,7 +63,7 @@ public class GameArray {
         boolean moved = moveLeft();
 
         for (int i = 0; i < values.length; i ++) {
-            for (int j = values.length-2; j >= 0 ; j ++) {
+            for (int j = values.length-2; j >= 0 ; j --) {
                 if (values[i][j+1] == values[i][j]) {
                     moved = true;
 
