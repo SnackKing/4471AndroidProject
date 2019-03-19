@@ -39,7 +39,7 @@ public class GameArray {
         //merge
         for (int i = 0; i < values.length; i++) {
             for (int j = values[0].length - 2; j >= 0; j --) {
-                if (values[i][j+1] == values[i][j]) {
+                if (values[i][j+1] == values[i][j] && values[i][j] != 0) {
                     moved = true;
 
                     values[i][j+1] *= 2;
@@ -64,7 +64,7 @@ public class GameArray {
 
         for (int i = 0; i < values.length; i ++) {
             for (int j = values.length-2; j >= 0 ; j --) {
-                if (values[i][j+1] == values[i][j]) {
+                if (values[i][j+1] == values[i][j] && values[i][j] != 0) {
                     moved = true;
 
                     // can merger
@@ -89,7 +89,7 @@ public class GameArray {
         // merging
         for (int j = 0; j < values[0].length; j++) {
             for (int i = 1; i < values.length; i ++ ) {
-                if (values[i][j] == values[i-1][j]) {
+                if (values[i][j] == values[i-1][j] && values[i][j] != 0) {
                     moved = true;
 
                     values[i-1][j] *= 2;
@@ -112,7 +112,7 @@ public class GameArray {
         // merge
         for (int j = 0; j < values[0].length; j ++) {
             for (int i = 1; i < values.length; i ++) {
-                if (values[i][j] == values[i-1][j]) {
+                if (values[i][j] == values[i-1][j] && values[i][j] != 0) {
                     moved = true;
 
                     values[i - 1][j] *= 2;
