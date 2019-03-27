@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,7 +28,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     private final int PERMISSIONS = 1;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+
+    // for 2048 game
     GameLogic mainLogic;
+    SharedPreferences prefs;
+    private final String HIGH_SCORE_TAG = "2048Score";
+    private TextView highScoreView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             getContactList();
         }
 
+        prefs = getApplicationContext().getSharedPreferences("2048", 0);
         mainLogic = initGameLogic();
 
         Button restartButton = findViewById(R.id.restart);
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 mainLogic = initGameLogic();
             }
         });
+        highScoreView = findViewById(R.id.highScore);
+        highScoreView.setText(Integer.toString(getHighScore()));
     }
 
     public void checkPermissions(){
@@ -231,10 +240,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void newHighScore(int score) {
+        if (score > getHighScore()) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(HIGH_SCORE_TAG, score);
+            editor.commit();
 
+            highScoreView.setText(Integer.toString(score));
+        }
     }
 
     private int getHighScore () {
-        return 0;
+        return prefs.getInt(HIGH_SCORE_TAG, 0);
     }
 }
