@@ -97,7 +97,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
                 Call_Log call = new Call_Log(phNumber, callDayTime, callDuration, dir);
                 Log.d("BACKGROUND", "CREATED CALL");
-                mRootRef.child("Contacts").child(uid).child(callDayTime.toString()).setValue(call);
+                mRootRef.child("Logs").child(uid).child(callDayTime.toString()).setValue(call);
 
             }
             managedCursor.close();

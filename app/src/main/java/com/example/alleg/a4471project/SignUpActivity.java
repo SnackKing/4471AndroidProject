@@ -117,7 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
     private void writeNewUser(String userId, String dateOfBirth, String name, String phoneNumber){
         LocalDateTime joinDate = LocalDateTime.now();
-        User user = new User(dateOfBirth, name, phoneNumber, joinDate);
+        User user = new User(dateOfBirth, name, phoneNumber, joinDate, userId);
 
         database.child("users").child(userId).setValue(user);
     }
