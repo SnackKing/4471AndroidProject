@@ -6,6 +6,12 @@ import android.widget.TextView;
 
 public class GameLogic {
 
+    public interface OnGameEnd {
+        void onGameWin(int score);
+        void onGameLose(int score);
+        void updateHighScore(int score);
+    }
+
     private static int getColor(int value) {
         String color;
         switch (value) {
@@ -60,11 +66,15 @@ public class GameLogic {
     Button[][] buttons;
     TextView scoreDisplay;
     int score;
+    int currentHighScore;
+    OnGameEnd ender;
 
-    public GameLogic(Button[][] btns, TextView sd) {
+    public GameLogic(Button[][] btns, TextView sd, OnGameEnd endHandler, int high) {
         gameArr = new GameArray();
         buttons = btns;
         score = 0;
+        currentHighScore = high;
+        ender = endHandler;
 
         scoreDisplay = sd;
 
@@ -121,6 +131,11 @@ public class GameLogic {
             this.updateDisplay();
         }
 
+        if (score > currentHighScore) {
+            currentHighScore = score;
+            ender.updateHighScore(score);
+        }
+
         boolean won = hasWon();
 
         if (won) {
@@ -144,15 +159,11 @@ public class GameLogic {
     }
 
     private void lose() {
-        endGame();
+        ender.onGameLose(score);
     }
 
     private void win() {
-        endGame();
-    }
-
-    private void endGame() {
-        // update high scores and such
+        ender.onGameWin(score);
     }
 
 }

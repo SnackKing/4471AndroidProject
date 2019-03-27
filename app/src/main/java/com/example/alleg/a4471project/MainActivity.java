@@ -11,9 +11,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -171,8 +168,29 @@ public class MainActivity extends AppCompatActivity {
         return buttons;
     }
 
+    private class Ender implements GameLogic.OnGameEnd {
+        @Override
+        public void onGameWin(int score) {
+            newHighScore(score);
+            displayGameWon();
+        }
+
+        @Override
+        public void onGameLose(int score) {
+            newHighScore(score);
+            displayGameLose();
+        }
+
+        @Override
+        public void updateHighScore(int score) {
+            newHighScore(score);
+        }
+    }
+
     private GameLogic initGameLogic() {
         TextView sd = findViewById(R.id.score);
+
+        Ender ender = new Ender();
 
         // get main table, set  up swipe listeners
         TableLayout mainTable = findViewById(R.id.MainTable);
@@ -198,6 +216,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        return new GameLogic(getButtons(), sd);
+        return new GameLogic(getButtons(), sd, ender, getHighScore());
+    }
+
+    private void displayGameWon() {
+
+    }
+
+    private void displayGameLose() {
+
+    }
+
+    private void newHighScore(int score) {
+
+    }
+
+    private int getHighScore () {
+        return 0;
     }
 }
