@@ -123,9 +123,9 @@ public class GameLogic {
         finishMove(gameArr.swipeDown());
     }
 
-    private void finishMove(int newScore) {
-        if (newScore != GameArray.UNMOVED_TOKEN) {
-            score += newScore;
+    private void finishMove(GameArray.FinishState state) {
+        if (state.score != GameArray.UNMOVED_TOKEN) {
+            score += state.score;
             this.updateDisplay(gameArr.addNumber());
         } else {
             this.updateDisplay();
@@ -136,27 +136,15 @@ public class GameLogic {
             ender.updateHighScore(score);
         }
 
-        boolean won = hasWon();
-
-        if (won) {
+        if (state.winningMove) {
             win();
-        }
-
-        if (won && !canMove()) {
+        } else if (!canMove()) {
             lose();
         }
     }
 
     // TODO
     private boolean canMove() { return true; }
-
-    private boolean hasWon() {
-        if (score < 2048) {
-            return false;
-        }
-
-        return false;
-    }
 
     private void lose() {
         ender.onGameLose(score);

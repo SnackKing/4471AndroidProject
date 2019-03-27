@@ -8,11 +8,24 @@ public class GameArray {
     public static final int UNMOVED_TOKEN = -1;
 
     private int[][] values;
+    private boolean hasWon;
 
     private Random rand;
 
+    public class FinishState {
+        // this is just a tuple
+        boolean winningMove;
+        int score;
+
+        FinishState(boolean w, int s) {
+            score = s;
+            winningMove = w;
+        }
+    }
+
     public GameArray() {
         values = new int[4][4];
+        hasWon = false;
 
         for (int i = 0; i < values.length; i++) {
             Arrays.fill(values[i], PROGRESSION[0]);
@@ -31,8 +44,18 @@ public class GameArray {
 
     // these return the score increase
 
-    public int swipeRight() {
+    private boolean winningMove(int i, int j) {
+        if (values[i][j] == 2048 && !hasWon) {
+            hasWon = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    public FinishState swipeRight() {
         int score = 0;
+        boolean w = false;
 
         boolean moved = moveRight();
 
@@ -45,6 +68,8 @@ public class GameArray {
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
 
+                    w = winningMove(i, j+1);
+
                     score += values[i][j+1];
                 }
             }
@@ -53,12 +78,13 @@ public class GameArray {
         moved = moveRight() || moved;
 
         if (!moved)
-            return UNMOVED_TOKEN;
-        else return score;
+            return new FinishState(false, score);
+        else return new FinishState(w, score);
     }
 
-    public int swipeLeft() {
+    public FinishState swipeLeft() {
         int score = 0;
+        boolean w = false;
 
         boolean moved = moveLeft();
 
@@ -71,18 +97,21 @@ public class GameArray {
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
 
+                    w = winningMove(i, j+1);
+
                     score += values[i][j+1];
                 }
             }
         }
 
         moved = moveLeft() || moved;
-        if (!moved) return UNMOVED_TOKEN;
-        else return score;
+        if (!moved) return new FinishState(false, UNMOVED_TOKEN);
+        else return new FinishState(w, score);
     }
 
-    public int swipeUp() {
+    public FinishState swipeUp() {
         int score = 0;
+        boolean w = false;
 
         boolean moved = moveUp();
 
@@ -94,18 +123,23 @@ public class GameArray {
 
                     values[i-1][j] *= 2;
                     values[i][j] = 0;
+
+                    w = winningMove(i - 1, j);
+
                     score += values[i-1][j];
                 }
             }
         }
 
         moved = moveUp() || moved;
-        if (!moved) return UNMOVED_TOKEN;
-        else return score;
+        if (!moved) return new FinishState(false, UNMOVED_TOKEN);
+        else return new FinishState(w, score);
     }
 
-    public int swipeDown() {
+    public FinishState swipeDown() {
         int score = 0;
+
+        boolean w = false;
 
         boolean moved = moveDown();
 
@@ -117,14 +151,17 @@ public class GameArray {
 
                     values[i - 1][j] *= 2;
                     values[i][j] = 0;
+
+                    w = winningMove(i-1, j);
+
                     score += values[i-1][j];
                 }
             }
         }
 
         moved = moveDown() || moved;
-        if (!moved) return UNMOVED_TOKEN;
-        else return score;
+        if (!moved) return new FinishState(false, UNMOVED_TOKEN);
+        else return new FinishState(w, score);
     }
 
     public int[] addNumber() {
