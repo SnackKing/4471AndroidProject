@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -183,19 +185,38 @@ public class MainActivity extends AppCompatActivity {
     private class Ender implements GameLogic.OnGameEnd {
         @Override
         public void onGameWin(int score) {
-            newHighScore(score);
-            displayGameWon();
+            final int s = score;
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    newHighScore(s);
+                    displayGameWon();
+                }
+            });
         }
 
         @Override
         public void onGameLose(int score) {
-            newHighScore(score);
-            displayGameLose();
+            final int s = score;
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    newHighScore(s);
+                    displayGameLose();
+                }
+            });
         }
 
         @Override
         public void updateHighScore(int score) {
-            newHighScore(score);
+            final int s = score;
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    newHighScore(s);
+                    displayGameLose();
+                }
+            });
         }
     }
 
@@ -207,24 +228,66 @@ public class MainActivity extends AppCompatActivity {
         // get main table, set  up swipe listeners
         TableLayout mainTable = findViewById(R.id.MainTable);
         mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
+            int progressLock = 0;
+
             @Override
             public void onSwipeTop() {
-                mainLogic.swipeUp();
+                if (progressLock == 0) {
+                    progressLock = 1;
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            mainLogic.swipeUp();
+                            progressLock = 0;
+                            return null;
+                        }
+                    }.execute();
+                }
             }
 
             @Override
             public void onSwipeRight() {
-                mainLogic.swipeRight();
+                if (progressLock == 0) {
+                    progressLock = 1;
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            mainLogic.swipeRight();
+                            progressLock = 0;
+                            return null;
+                        }
+                    }.execute();
+                }
             }
 
             @Override
             public void onSwipeLeft() {
-                mainLogic.swipeLeft();
+                if (progressLock == 0) {
+                    progressLock = 1;
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            mainLogic.swipeLeft();
+                            progressLock = 0;
+                            return null;
+                        }
+                    }.execute();
+                }
             }
 
             @Override
             public void onSwipeBottom() {
-                mainLogic.swipeDown();
+                if (progressLock == 0) {
+                    progressLock = 1;
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            mainLogic.swipeDown();
+                            progressLock = 0;
+                            return null;
+                        }
+                    }.execute();
+                }
             }
         });
 

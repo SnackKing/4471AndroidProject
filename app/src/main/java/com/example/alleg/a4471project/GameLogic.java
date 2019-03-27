@@ -1,6 +1,8 @@
 package com.example.alleg.a4471project;
 
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -86,25 +88,34 @@ public class GameLogic {
     }
 
     private void updateDisplay(int[] newNum) {
-        scoreDisplay.setText(Integer.toString(score));
+        Handler mainHandler = new Handler(Looper.getMainLooper());
 
-        for (int i = 0; i < 4; i ++ ) {
-            for (int j = 0; j < 4; j ++) {
-                int value = gameArr.getValue(i, j);
+        final int[] newLoc = newNum;
 
-                if (newNum[0] == i && newNum[1] == j) {
-                    buttons[i][j].setBackgroundColor(Color.YELLOW);
-                } else {
-                    buttons[i][j].setBackgroundColor(getColor(value));
-                }
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                scoreDisplay.setText(Integer.toString(score));
 
-                if (value == 0) {
-                    buttons[i][j].setText("");
-                } else {
-                    buttons[i][j].setText(Integer.toString(value));
+                for (int i = 0; i < 4; i ++ ) {
+                    for (int j = 0; j < 4; j ++) {
+                        int value = gameArr.getValue(i, j);
+
+                        if (newLoc[0] == i && newLoc[1] == j) {
+                            buttons[i][j].setBackgroundColor(Color.YELLOW);
+                        } else {
+                            buttons[i][j].setBackgroundColor(getColor(value));
+                        }
+
+                        if (value == 0) {
+                            buttons[i][j].setText("");
+                        } else {
+                            buttons[i][j].setText(Integer.toString(value));
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
     public void swipeRight() {
@@ -124,11 +135,15 @@ public class GameLogic {
     }
 
     private void finishMove(GameArray.FinishState state) {
+        boolean cnMv = canMove();
+
         if (state.score != GameArray.UNMOVED_TOKEN) {
             score += state.score;
             this.updateDisplay(gameArr.addNumber());
-        } else {
+        } else if (cnMv){
             this.updateDisplay();
+
+
         }
 
         if (score > currentHighScore) {
@@ -137,21 +152,36 @@ public class GameLogic {
         }
 
         if (state.winningMove) {
-            win();
-        } else if (!canMove()) {
-            lose();
+            ender.onGameWin(score);
+        } else if (!cnMv) {
+            ender.onGameLose(score);
         }
     }
 
-    // TODO
-    private boolean canMove() { return true; }
+    private boolean canMove() {
+        for (int row = 0; row < 4; row++){
+            for (int col = 0; col<4; col++){
+                int currentValue = gameArr.getValue(row, col);
 
-    private void lose() {
-        ender.onGameLose(score);
-    }
+                if (currentValue == 0) {
+                    return true;
+                } else {
+                    int[][] moves = {{row - 1, col}, {row + 1, col}, {row, col-1}, {row, col + 1}};
 
-    private void win() {
-        ender.onGameWin(score);
+                    for (int[] move : moves) {
+                        // if a valid other square
+                        if (move[0] >= 0 && move[0] < 4 && move[1] >= 0 && move[1] < 4) {
+                            if (gameArr.getValue(move[0], move[1]) == currentValue) {
+                                // can combine these
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 }
