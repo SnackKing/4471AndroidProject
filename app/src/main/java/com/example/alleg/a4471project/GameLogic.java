@@ -7,11 +7,53 @@ import android.widget.TextView;
 public class GameLogic {
 
     private static int getColor(int value) {
-        if (value == 0) {
-            return Color.GRAY;
-        } else {
-            return Color.CYAN;
+        String color;
+        switch (value) {
+            case 0:
+                color = "#C7B9AC";
+                break;
+            case 2:
+                color = "#EEE5DB";
+                break;
+            case 4:
+                color = "#EEE3CF";
+                break;
+            case 8:
+                color = "#F4B37F";
+                break;
+            case 16:
+                color = "#EC8D53";
+                break;
+            case 32:
+                color = "#F57C5F";
+                break;
+            case 64:
+                color = "#E95937";
+                break;
+            case 128:
+                color = "#EACC79";
+                break;
+            case 256:
+                color = "#ECCC60";
+                break;
+            case 512:
+                color = "#E5C02A";
+                break;
+            case 1024:
+                color = "#EDC53F";
+                break;
+            case 2048:
+                color = "#E6BF03";
+                break;
+            case 4096:
+                color = "#D73133";
+                break;
+            default:
+                // values larger than 4096
+                color = "#DA191A";
         }
+
+        return Color.parseColor(color);
     }
 
     GameArray gameArr;
@@ -100,6 +142,7 @@ public class GameLogic {
 
         return false;
     }
+
     private void lose() {
         endGame();
     }
