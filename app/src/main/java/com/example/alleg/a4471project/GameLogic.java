@@ -112,6 +112,12 @@ public class GameLogic {
                         } else {
                             buttons[i][j].setText(Integer.toString(value));
                         }
+
+                        if (value > 4) {
+                            buttons[i][j].setTextColor(Color.WHITE);
+                        } else {
+                            buttons[i][j].setTextColor(Color.BLACK);
+                        }
                     }
                 }
             }

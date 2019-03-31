@@ -19,7 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -174,10 +174,9 @@ public class MainActivity extends AppCompatActivity {
                 String buttonID = "grid" + i + j;
                 int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
                 buttons[i][j] = findViewById(resID);
+                buttons[i][j].setTextSize(22);
             }
         }
-
-        // TODO set button sizes
 
         return buttons;
     }
@@ -226,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         Ender ender = new Ender();
 
         // get main table, set  up swipe listeners
-        TableLayout mainTable = findViewById(R.id.MainTable);
+        LinearLayout mainTable = findViewById(R.id.MainTable);
         mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
             int progressLock = 0;
 

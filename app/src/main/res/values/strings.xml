@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">4471 Project</string>
+    <string name="app_name">2048</string>
     <string name="title_activity_sign_up">Sign Up</string>
 
     <!-- Strings related to login -->
