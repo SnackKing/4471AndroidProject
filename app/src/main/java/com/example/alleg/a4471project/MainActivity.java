@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
@@ -17,11 +18,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences prefs;
     private final String HIGH_SCORE_TAG = "2048Score";
     private TextView highScoreView;
+    private LinearLayout topLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         });
         highScoreView = findViewById(R.id.highScore);
         highScoreView.setText(Integer.toString(getHighScore()));
+
+        topLevel = findViewById(R.id.topLevel);
     }
 
     public void checkPermissions(){
@@ -213,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     newHighScore(s);
-                    displayGameLose();
                 }
             });
         }
@@ -294,11 +299,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayGameWon() {
+        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.win_pop_up, null);
+        final PopupWindow window = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        if(Build.VERSION.SDK_INT>=21){
+            window.setElevation(5.0f);
+        }
+
+        Button cont = customView.findViewById(R.id.cont);
+        Button newGame = customView.findViewById(R.id.new_game);
+
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                window.dismiss();
+            }
+        });
+
+        newGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainLogic = initGameLogic();
+                window.dismiss();
+            }
+        });
+
+        window.showAtLocation(topLevel, Gravity.CENTER,0,0);
     }
 
     private void displayGameLose() {
+        Log.d("joe", "here1{");
+        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.lose_pop_up, null);
+        final PopupWindow window = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        if(Build.VERSION.SDK_INT>=21){
+            window.setElevation(5.0f);
+        }
+
+        Button newGame = customView.findViewById(R.id.start_over);
+
+        newGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainLogic = initGameLogic();
+                window.dismiss();
+            }
+        });
+
+        window.showAtLocation(topLevel, Gravity.CENTER,0,0);
     }
 
     private void newHighScore(int score) {

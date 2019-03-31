@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lose_pop_up"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#D6B856"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Game Over"
+        android:textSize="20dp"
+        android:paddingBottom="10dp"/>
+
+    <Button
+        android:id="@+id/start_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#8D7C6C"
+        android:padding="10dp"
+        android:text="Start Over" />
+
+</LinearLayout>
