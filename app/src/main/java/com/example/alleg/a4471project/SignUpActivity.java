@@ -96,27 +96,55 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
     public void addUser(String email, final String password, final String phone, final String name, final String dob){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(user.getUid(),dob, name, phone, password);
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+        if(validate(email,password,phone, name, dob)) {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                writeNewUser(user.getUid(), dob, name, phone, password);
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
 
-                        // ...
-                    }
-                });
+                            // ...
+                        }
+                    });
+        }
     }
+    private boolean validate(String email, String password, String phone, String name, String dob){
+        boolean isValid = true;
+        if(name.length() == 0){
+            mNameView.setError("Name can't be empty");
+            isValid = false;
+        }
+        if(phone.length() == 0){
+            mPhoneView.setError("Phone can't be empty");
+            isValid = false;
+        }
+        if(dob.length() == 0){
+            mDobView.setError("Date of birth can't be empty");
+            isValid = false;
+        }
+        if(email.length() == 0){
+            mEmailView.setError("Email can't be empty");
+            isValid = false;
+        }
+        if(password.length() == 0){
+            mPasswordView.setError("Password can't be empty");
+            isValid = false;
+        }
+        return isValid;
+
+    }
+
     private void writeNewUser(String userId, String dateOfBirth, String name, String phoneNumber, String password){
         LocalDateTime joinDate = LocalDateTime.now();
         User user = new User(dateOfBirth, name, phoneNumber, joinDate, userId, password);
