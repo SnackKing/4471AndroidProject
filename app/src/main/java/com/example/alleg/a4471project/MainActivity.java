@@ -30,6 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class MainActivity extends AppCompatActivity {
     private final int PERMISSIONS = 1;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private final String HIGH_SCORE_TAG = "2048Score";
     private TextView highScoreView;
     private LinearLayout topLevel;
+
+    Lock backgroundLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getApplicationContext().getSharedPreferences("2048", 0);
         mainLogic = initGameLogic();
+
+        backgroundLock = new ReentrantLock();
 
         Button restartButton = findViewById(R.id.restart);
         restartButton.setText("Restart");
@@ -232,66 +240,100 @@ public class MainActivity extends AppCompatActivity {
         // get main table, set  up swipe listeners
         LinearLayout mainTable = findViewById(R.id.MainTable);
         mainTable.setOnTouchListener(new MainSwipeListener(MainActivity.this) {
-            int progressLock = 0;
-
             @Override
             public void onSwipeTop() {
-                if (progressLock == 0) {
-                    progressLock = 1;
-                    new AsyncTask<Void, Void, Void>() {
+                new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... params) {
-                            mainLogic.swipeUp();
-                            progressLock = 0;
-                            return null;
+                        try {
+                            if (backgroundLock.tryLock(5L, TimeUnit.SECONDS)) {
+                                try {
+                                    // manipulate protected state
+                                    mainLogic.swipeUp();
+                                } finally {
+                                    backgroundLock.unlock();
+                                }
+                            } else {
+                                // perform alternative actions
+                            }
+                        } catch (InterruptedException e) {
+                            // do nothing, ignore this
                         }
-                    }.execute();
-                }
+                        return null;
+                        }
+                }.execute();
             }
 
             @Override
             public void onSwipeRight() {
-                if (progressLock == 0) {
-                    progressLock = 1;
-                    new AsyncTask<Void, Void, Void>() {
+                new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... params) {
-                            mainLogic.swipeRight();
-                            progressLock = 0;
-                            return null;
+                        try {
+                            if (backgroundLock.tryLock(5L, TimeUnit.SECONDS)) {
+                                try {
+                                    // manipulate protected state
+                                    mainLogic.swipeRight();
+                                } finally {
+                                    backgroundLock.unlock();
+                                }
+                            } else {
+                                // perform alternative actions
+                            }
+                        } catch (InterruptedException e) {
+                            // do nothing, ignore this
                         }
-                    }.execute();
-                }
+                        return null;
+                        }
+                }.execute();
             }
 
             @Override
             public void onSwipeLeft() {
-                if (progressLock == 0) {
-                    progressLock = 1;
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            mainLogic.swipeLeft();
-                            progressLock = 0;
-                            return null;
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            if (backgroundLock.tryLock(5L, TimeUnit.SECONDS)) {
+                                try {
+                                    // manipulate protected state
+                                    mainLogic.swipeLeft();
+                                } finally {
+                                    backgroundLock.unlock();
+                                }
+                            } else {
+                                // perform alternative actions
+                            }
+                        } catch (InterruptedException e) {
+                            // do nothing, ignore this
                         }
-                    }.execute();
-                }
+                        return null;
+                    }
+                }.execute();
             }
 
             @Override
             public void onSwipeBottom() {
-                if (progressLock == 0) {
-                    progressLock = 1;
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            mainLogic.swipeDown();
-                            progressLock = 0;
-                            return null;
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            if (backgroundLock.tryLock(5L, TimeUnit.SECONDS)) {
+                                try {
+                                    // manipulate protected state
+                                    mainLogic.swipeDown();
+                                } finally {
+                                    backgroundLock.unlock();
+                                }
+                            } else {
+                                // perform alternative actions
+                            }
+                        } catch (InterruptedException e) {
+                            // do nothing, ignore this
                         }
-                    }.execute();
-                }
+                        return null;
+                    }
+                }.execute();
             }
         });
 
@@ -329,7 +371,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayGameLose() {
-        Log.d("joe", "here1{");
         LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.lose_pop_up, null);
         final PopupWindow window = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -355,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
         if (score > getHighScore()) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt(HIGH_SCORE_TAG, score);
-            editor.commit();
+            editor.apply();
 
             highScoreView.setText(Integer.toString(score));
         }
