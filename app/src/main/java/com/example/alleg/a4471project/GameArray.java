@@ -68,7 +68,7 @@ public class GameArray {
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
 
-                    w = winningMove(i, j+1);
+                    w = w || winningMove(i, j+1);
 
                     score += values[i][j+1];
                 }
@@ -97,7 +97,7 @@ public class GameArray {
                     values[i][j+1] *= 2;
                     values[i][j] = 0;
 
-                    w = winningMove(i, j+1);
+                    w = w || winningMove(i, j+1);
 
                     score += values[i][j+1];
                 }
@@ -124,7 +124,7 @@ public class GameArray {
                     values[i-1][j] *= 2;
                     values[i][j] = 0;
 
-                    w = winningMove(i - 1, j);
+                    w = w || winningMove(i - 1, j);
 
                     score += values[i-1][j];
                 }
@@ -152,7 +152,7 @@ public class GameArray {
                     values[i - 1][j] *= 2;
                     values[i][j] = 0;
 
-                    w = winningMove(i-1, j);
+                    w = w || winningMove(i-1, j);
 
                     score += values[i-1][j];
                 }
