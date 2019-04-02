@@ -148,8 +148,6 @@ public class GameLogic {
             this.updateDisplay(gameArr.addNumber());
         } else if (cnMv){
             this.updateDisplay();
-
-
         }
 
         if (score > currentHighScore) {
