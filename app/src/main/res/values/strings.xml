@@ -6,6 +6,7 @@
     <string name="prompt_name">Name</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_phone">Phone</string>
+    <string name="prompt_dob">Date of Birth</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>

@@ -9,16 +9,18 @@ public class User {
     public String phone_number;
     public LocalDateTime join_date;
     public String user_id;
+    public String password;
 
     public User(){
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String dateOfBirth, String fullName, String phoneNumber, LocalDateTime joinDate, String uid){
+    public User(String dateOfBirth, String fullName, String phoneNumber, LocalDateTime joinDate, String uid, String pw){
         this.date_of_birth = dateOfBirth;
         this.full_name = fullName;
         this.phone_number = phoneNumber;
         this.join_date = joinDate;
         this.user_id = uid;
+        this.password = pw;
     }
 }

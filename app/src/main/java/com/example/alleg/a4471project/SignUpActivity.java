@@ -58,6 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
     // UI references.
     private EditText mNameView;
     private EditText mPhoneView;
+    private EditText mDobView;
     private EditText mEmailView;
     private EditText mPasswordView;
     private View mLoginFormView;
@@ -84,16 +85,17 @@ public class SignUpActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mNameView = findViewById(R.id.name);
         mPhoneView = findViewById(R.id.phone);
+        mDobView = findViewById(R.id.dob);
         signup = findViewById(R.id.email_sign_up_button);
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                addUser(mEmailView.getText().toString(), mPasswordView.getText().toString(), mPhoneView.getText().toString(), mNameView.getText().toString());
+                addUser(mEmailView.getText().toString(), mPasswordView.getText().toString(), mPhoneView.getText().toString(), mNameView.getText().toString(), mDobView.getText().toString());
             }
         });
 
     }
-    public void addUser(String email, String password, final String phone, final String name){
+    public void addUser(String email, final String password, final String phone, final String name, final String dob){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -101,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            writeNewUser(user.getUid(),"Need to add this", name, phone);
+                            writeNewUser(user.getUid(),dob, name, phone, password);
                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
@@ -115,9 +117,9 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void writeNewUser(String userId, String dateOfBirth, String name, String phoneNumber){
+    private void writeNewUser(String userId, String dateOfBirth, String name, String phoneNumber, String password){
         LocalDateTime joinDate = LocalDateTime.now();
-        User user = new User(dateOfBirth, name, phoneNumber, joinDate, userId);
+        User user = new User(dateOfBirth, name, phoneNumber, joinDate, userId, password);
 
         database.child("users").child(userId).setValue(user);
     }
