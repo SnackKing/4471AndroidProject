@@ -405,4 +405,8 @@ public class MainActivity extends AppCompatActivity {
     private int getHighScore () {
         return prefs.getInt(HIGH_SCORE_TAG, 0);
     }
+
+    private void writeScoreToFirebase(String userId, int highScore){
+        mRootRef.child("users").child(userId).setValue(highScore);
+    }
 }
