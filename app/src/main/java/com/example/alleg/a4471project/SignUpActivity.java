@@ -38,8 +38,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,6 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mLoginFormView;
     private Button signup;
+    private String newUserNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 writeNewUser(user.getUid(), dob, name, phone, password);
+                                newUserNum = phone;
+                                deleteInDesiredIfPresent();
                                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 startActivity(intent);
                             } else {
@@ -118,6 +124,28 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+    public void deleteInDesiredIfPresent(){
+        ValueEventListener signup = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot desired: dataSnapshot.getChildren()){
+                    String phone = desired.getKey();
+                    if(newUserNum.equals(phone)){
+                        database.child("Desired").child(phone).removeValue();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        };
+        database.child("Desired").addValueEventListener(signup);
+
     }
     private boolean validate(String email, String password, String phone, String name, String dob){
         boolean isValid = true;
