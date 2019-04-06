@@ -135,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
 
         mRootRef.child("contacts").child(userId).child(fullName).setValue(contact);
     }
+    private void writeNewDesired(String phoneNumber){
+        mRootRef.child("Desired").child(phoneNumber).setValue(0);
+    }
 
     private void writeNewLocation(String userId, String longitude, String latitude){
         Location location = new Location(longitude, latitude);
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
                         String userID = getUserid();
                         writeNewContact(userID, name, phoneNo);
+                        writeNewDesired(phoneNo);
                     }
                     pCur.close();
                 }
